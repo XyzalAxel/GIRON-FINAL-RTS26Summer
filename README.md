@@ -65,44 +65,52 @@ The ISR performs only time-critical operations. Substantial processing and loggi
 
 ## System Architecture
 
-![System Architecture](images/architecture-diagram.png)
+```mermaid
+flowchart TD
+    Button["Button / Safety Sensor<br>GPIO 18"]
+    ISR["GPIO ISR<br>Top-Half Handler"]
+    Debounce{"Valid event?"}
+    Drop["Reject bounced edge"]
+    Timestamp["Record ISR timestamp"]
+    Pulse["GPIO 19 ISR pulse"]
+    Semaphore["Give binary semaphore"]
+    Notification["Send direct task notification"]
+    SemTask["Semaphore Task<br>Core 1, Priority 12"]
+    NotifTask["Notification Task<br>Core 1, Priority 12"]
+    Measurement["Calculate wake-up latency"]
+    Serial["Serial monitor output"]
+    Load["Periodic Load Tasks<br>Core 1"]
 
-```text
-Industrial Button / Safety Sensor
-                |
-                v
-          GPIO 18 Interrupt
-                |
-                v
-        Minimal Top-Half ISR
-          /             \
-         v               v
-Binary Semaphore    Direct Notification
-         |               |
-         v               v
-Semaphore Task     Notification Task
-         \               /
-          \             /
-           v           v
-          Latency Measurement
-                  |
-                  v
-          Serial Monitor Output
+    Button -->|"Falling edge"| ISR
+    ISR --> Debounce
+    Debounce -->|"No"| Drop
+    Debounce -->|"Yes"| Timestamp
 
-Background Load Tasks
-        |
-        v
-Scheduling Interference and Increased Jitter
+    Timestamp --> Pulse
+    Timestamp --> Semaphore
+    Timestamp --> Notification
 
-GPIO 19
-        |
-        v
-Logic Analyzer ISR Pulse
+    Semaphore --> SemTask
+    Notification --> NotifTask
+
+    SemTask --> Measurement
+    NotifTask --> Measurement
+    Measurement --> Serial
+
+    Load -.->|"Scheduling interference"| SemTask
+    Load -.->|"Scheduling interference"| NotifTask
 ```
 
-> Add the exported architecture diagram to `images/architecture-diagram.png`. Until then, GitHub will show a broken image placeholder, so upload the file before final submission.
+### Architecture Notes
 
----
+- All application tasks are pinned to **Core 1** to prevent task migration from becoming an additional variable in the latency comparison.
+- The GPIO ISR acts as the event producer.
+- `btn_task_notif` and `btn_task_sem` act as bottom-half consumers.
+- The direct notification and binary semaphore paths receive the same interrupt event for comparison.
+- GPIO 19 exposes ISR execution to the Wokwi logic analyzer.
+- The four periodic load tasks create controlled scheduling interference.
+- Serial logging occurs in task context rather than interrupt context.
+- `portYIELD_FROM_ISR()` requests an immediate scheduling decision after the ISR wakes a task.
 
 ## Hardware and Software
 
