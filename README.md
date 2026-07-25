@@ -603,17 +603,8 @@ Future versions could improve the experiment by:
 GIRON-FINAL-RTS26Summer/
 ├── README.md
 ├── LICENSE
-├── index.html
 ├── code/
 │   └── main.cpp
-├── images/
-│   ├── architecture-diagram.png
-│   ├── logic-analyzer.png
-│   └── wokwi-screenshot.png
-├── logs/
-│   ├── idle-results.txt
-│   ├── loaded-results.txt
-│   └── fault-injection-results.txt
 └── reflection.md
 ```
 
