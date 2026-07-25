@@ -657,3 +657,15 @@ Electrical Engineering Student, University of Central Florida
 ## License
 
 This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
+
+## AI Assistance Disclosure
+
+The following AI tools were used during development.
+
+| Tool | Purpose | Human Verification |
+|-------|----------|--------------------|
+| ChatGPT | README organization | Verified against source code |
+| ChatGPT | Grammar improvements | Reviewed manually |
+| ChatGPT | Diagram formatting | Modified to match implementation |
+
+All engineering decisions, measurements, and code behavior were verified using the final implementation and Wokwi simulation.
