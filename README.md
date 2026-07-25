@@ -18,7 +18,7 @@ The project is themed as an **industrial safety-event handler**, where a button 
 ## Project Links
 
 - **Wokwi Simulation:** [Open the project in Wokwi](https://wokwi.com/projects/468090864442174465)
-- **GitHub Pages:** `ADD_GITHUB_PAGES_URL`
+- **GitHub Pages:** [View the project site](https://xyzalaxel.github.io/GIRON-FINAL-RTS26Summer/)
 - **Demo Video:** `ADD_VIDEO_URL`
 
 ---
